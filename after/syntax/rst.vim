@@ -45,7 +45,7 @@ syn match rstBibliographicField `\v^\s*:(Author|Authors|Organization|Contact|Add
 
 syn match rstBlockQuoteAttr  `\v%(\_^\s*\n)@<=\s+---=\s.*`
 
-syn match   rstCommentTitle '\v(^\s+|(^\.\.\s+)@<=):=\u\w*(\s+\u\w*)*:' contained 
+syn match   rstCommentTitle '\v(^\s+|(^\.\.\s+)@<=):=\u\w*(\s+\u\w*)*:' contained
 syn cluster rstCommentGroup contains=rstCommentTitle,rstTodo
 
 
@@ -70,7 +70,7 @@ exe 'syn region rstDirective_code matchgroup=rstDirective fold '
     \.'skip=#^$# '
     \.'end=#^\s\@!# contains=@NoSpell,rstCodeBlockIndicator,@rst_code'
 exe 'syn cluster rstDirectives add=rstDirective_code'
-" TODO Can we use dynamical loading? 
+" TODO Can we use dynamical loading?
 " parse the code name of code directives dynamicly and load the syntax file?
 
 if exists("b:af_py_loaded")
@@ -82,32 +82,32 @@ for code in g:_riv_t.highlight_code
 
     " NOTE: As pygments are using differnet syntax name versus vim.
     " The highlight_code will contain a name pair, which is pygments|vim
-    
+
     if code =~ '[^|]\+|[^|]\+'
         let [pcode, vcode] = split(code, '|')
     else
         let [pcode, vcode] = [code, code]
     endif
-    
+
     " NOTE: the syntax_group_name must be words only.
     let scode = substitute(pcode, '[^0-9a-zA-Z]', 'x','g')
 
     let paths = split(globpath(path, "syntax/".vcode.".vim"), '\n')
-   
+
     if !empty(paths)
         let s:rst_{vcode}path= paths[0]
         if filereadable(s:rst_{vcode}path)
             unlet! b:current_syntax
-            " echohl WarningMsg 
+            " echohl WarningMsg
             " echom "SYN INCLUDE ". scode
             " echohl None
             " echom fnameescape(s:rst_{vcode}path)
             " echom "syntax/".vcode.".vim"
-          
+
             " " NOTE: Use this can not include correctly.
             " (maybe with space in 'program file' dir name)
             " exe "syn include @rst_".scode." ".s:{vcode}path
-           
+
             exe "syn include @rst_".scode." "."syntax/".vcode.".vim"
             exe 'syn region rstDirective_'.scode.' matchgroup=rstDirective fold '
                 \.'start=#\%(sourcecode\|code\%(-block\)\=\)::\s\+'.pcode.'\s*$# '
